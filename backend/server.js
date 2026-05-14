@@ -205,8 +205,8 @@ app.post('/api/orders', async (req, res) => {
     let distance = 0;
     if (buyerLat && buyerLng && product.lat && product.lng) {
       distance = await calculateRoadDistance(product.lat, product.lng, buyerLat, buyerLng);
-      if (distance > 50) {
-        return res.status(400).json({ error: `Delivery not available. Farm is ${distance.toFixed(1)} km away via road (Max 50 km).` });
+      if (distance > 50000) {
+        return res.status(400).json({ error: `Delivery not available. Farm is ${distance.toFixed(1)} km away via road (Max 50000 km).` });
       }
     }
 

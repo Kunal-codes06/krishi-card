@@ -104,6 +104,16 @@
       "_id": "d30b2ddd-cb02-4a53-b04c-7d200cf96905",
       "createdAt": "2026-05-14T03:53:19.313Z",
       "_collectionName": "users"
+    },
+    {
+      "name": "Demo Consumer",
+      "phoneOrEmail": "ebhtdfabh",
+      "password": "mockpassword",
+      "role": "consumer",
+      "aadharNumber": "000000000000",
+      "_id": "4bae5bc0-bfcc-4494-bfcd-2c7f4cd437fb",
+      "createdAt": "2026-05-14T03:57:53.487Z",
+      "_collectionName": "users"
     }
   ],
   "chatHistory": [
