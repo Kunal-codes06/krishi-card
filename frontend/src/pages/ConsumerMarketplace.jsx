@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect, no-unused-vars */
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, ShoppingCart, IndianRupee, MapPin, QrCode, X, User, Clock, CheckCircle, ArrowRight, ChevronRight, TrendingUp, TrendingDown } from 'lucide-react';
+import { Search, Filter, ShoppingCart, IndianRupee, MapPin, QrCode, X, User, Clock, CheckCircle, ArrowRight, ChevronRight, TrendingUp, TrendingDown, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from '../context/LocationContext';
 import 'leaflet/dist/leaflet.css';

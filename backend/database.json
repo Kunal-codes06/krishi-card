@@ -84,6 +84,26 @@
       "_id": "508dceab-acdd-461d-8eaa-6d9e7ad608ce",
       "createdAt": "2026-05-13T20:25:18.952Z",
       "_collectionName": "users"
+    },
+    {
+      "name": "Demo Consumer",
+      "phoneOrEmail": "test",
+      "password": "mockpassword",
+      "role": "consumer",
+      "aadharNumber": "000000000000",
+      "_id": "ff54b45f-8ab7-4f0b-a2f9-82ab7e87c230",
+      "createdAt": "2026-05-14T03:46:36.883Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Consumer",
+      "phoneOrEmail": "yjhrsnhr",
+      "password": "mockpassword",
+      "role": "consumer",
+      "aadharNumber": "000000000000",
+      "_id": "d30b2ddd-cb02-4a53-b04c-7d200cf96905",
+      "createdAt": "2026-05-14T03:53:19.313Z",
+      "_collectionName": "users"
     }
   ],
   "chatHistory": [
