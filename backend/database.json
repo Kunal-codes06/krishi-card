@@ -1,0 +1,163 @@
+{
+  "products": [
+    {
+      "name": "Fresh Tomatoes",
+      "farmer": "Ramesh Singh",
+      "location": "Nashik, MH",
+      "lat": 19.9975,
+      "lng": 73.7898,
+      "price": 20,
+      "stock": "50",
+      "image": "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?ixlib=rb-4.0.3&w=500&q=60",
+      "status": "In Stock",
+      "_id": "be821211-d1e7-4457-8c0d-1a822a33a5b0",
+      "createdAt": "2026-05-09T19:22:52.312Z"
+    },
+    {
+      "name": "Organic Potatoes",
+      "farmer": "Suresh Kumar",
+      "location": "Agra, UP",
+      "lat": 27.1767,
+      "lng": 78.0081,
+      "price": 15,
+      "stock": "100",
+      "image": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-4.0.3&w=500&q=60",
+      "status": "In Stock",
+      "_id": "d2d12745-a38b-4359-844f-f4f62eb90151",
+      "createdAt": "2026-05-09T19:22:52.312Z"
+    },
+    {
+      "name": "Red Onions",
+      "farmer": "Vikram Yadav",
+      "location": "Pune, MH",
+      "lat": 18.5204,
+      "lng": 73.8567,
+      "price": 30,
+      "stock": "200",
+      "image": "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?ixlib=rb-4.0.3&w=500&q=60",
+      "status": "In Stock",
+      "_id": "7d9eaede-443e-4d39-9bb2-bacfbe319414",
+      "createdAt": "2026-05-09T19:22:52.312Z"
+    }
+  ],
+  "orders": [],
+  "deliveries": [],
+  "feedbacks": [],
+  "farmerFeedbacks": [],
+  "users": [
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "4654684512",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "5166e3eb-b8d5-4a94-8a39-fe7b5e10684a",
+      "createdAt": "2026-05-13T18:56:13.673Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "84656513",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "7e2921f9-aa91-4d89-9e24-3a784490f53e",
+      "createdAt": "2026-05-13T19:50:03.603Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "845656",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "db631ca5-d48e-496e-bad9-7cf96f8807ff",
+      "createdAt": "2026-05-13T20:02:26.845Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "irjjtujt",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "508dceab-acdd-461d-8eaa-6d9e7ad608ce",
+      "createdAt": "2026-05-13T20:25:18.952Z",
+      "_collectionName": "users"
+    }
+  ],
+  "chatHistory": [
+    {
+      "userId": "anonymous",
+      "sender": "user",
+      "message": "hi",
+      "language": "Hindi",
+      "_id": "c7041e64-b001-45bc-b757-a6d04a67bd20",
+      "createdAt": "2026-05-13T19:56:13.071Z",
+      "_collectionName": "chatHistory"
+    },
+    {
+      "userId": "anonymous",
+      "sender": "bot",
+      "message": "I am Krishi Cart AI. Please configure GEMINI_API_KEY in the backend .env file to enable full AI responses. For now, I can help with basic orders and mandi prices!",
+      "language": "Hindi",
+      "_id": "dbb265f6-48ea-4224-8725-375c33c44844",
+      "createdAt": "2026-05-13T19:56:13.074Z",
+      "_collectionName": "chatHistory"
+    }
+  ],
+  "analytics": [
+    {
+      "crop": "Wheat",
+      "season": "Summer",
+      "demand": "Medium",
+      "quantity": 100,
+      "currentPrice": 30,
+      "predictedPrice": 30.09,
+      "trend": "up",
+      "timestamp": "2026-05-13T20:02:33.051Z",
+      "_id": "1b5033c0-82c0-4ee6-81b9-3e08d18e6b2c",
+      "createdAt": "2026-05-13T20:02:33.052Z",
+      "_collectionName": "analytics"
+    },
+    {
+      "crop": "Mango",
+      "season": "Winter",
+      "demand": "Low",
+      "quantity": 100,
+      "currentPrice": 30,
+      "predictedPrice": 25.5,
+      "trend": "down",
+      "timestamp": "2026-05-13T20:03:09.138Z",
+      "_id": "178b2f04-6969-405f-88a2-00c44f1ce1e3",
+      "createdAt": "2026-05-13T20:03:09.138Z",
+      "_collectionName": "analytics"
+    },
+    {
+      "crop": "Mango",
+      "season": "Winter",
+      "demand": "High",
+      "quantity": 100,
+      "currentPrice": 30,
+      "predictedPrice": 34.94,
+      "trend": "up",
+      "timestamp": "2026-05-13T20:03:20.732Z",
+      "_id": "e766acea-f8e9-4cb9-a5b6-306f00896242",
+      "createdAt": "2026-05-13T20:03:20.732Z",
+      "_collectionName": "analytics"
+    },
+    {
+      "crop": "Mango",
+      "season": "Winter",
+      "demand": "Medium",
+      "quantity": 100,
+      "currentPrice": 30,
+      "predictedPrice": 29.78,
+      "trend": "down",
+      "timestamp": "2026-05-13T20:03:27.646Z",
+      "_id": "f5f2b7f7-99d2-43fa-aed2-a6a52b8ccb3e",
+      "createdAt": "2026-05-13T20:03:27.646Z",
+      "_collectionName": "analytics"
+    }
+  ]
+}

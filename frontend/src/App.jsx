@@ -8,6 +8,8 @@ import ConsumerMarketplace from './pages/ConsumerMarketplace';
 import Checkout from './pages/Checkout';
 import TrackOrder from './pages/TrackOrder';
 import DeliveryDashboard from './pages/DeliveryDashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import NearbyFarmers from './pages/NearbyFarmers';
 import Navbar from './components/Navbar';
 import FeedbackModal from './components/FeedbackModal';
 import Profile from './pages/Profile';
@@ -82,6 +84,12 @@ function App() {
                   <Checkout />
                 </ProtectedRoute>
               } />
+
+              <Route path="/nearby" element={
+                <ProtectedRoute allowedRoles={['consumer']}>
+                  <NearbyFarmers />
+                </ProtectedRoute>
+              } />
               
               <Route path="/track/:orderId" element={
                 <ProtectedRoute allowedRoles={['consumer']}>
@@ -92,6 +100,12 @@ function App() {
               <Route path="/delivery" element={
                 <ProtectedRoute allowedRoles={['delivery']}>
                   <DeliveryDashboard />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/analytics" element={
+                <ProtectedRoute allowedRoles={['farmer', 'admin']}>
+                  <AdminDashboard />
                 </ProtectedRoute>
               } />
               

@@ -2,10 +2,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Bot, User, Sparkles } from 'lucide-react';
 import { useLocation } from '../context/LocationContext';
+import { useAuth } from '../context/AuthContext';
+import { Globe } from 'lucide-react';
 
 const Chatbot = () => {
   const { selectedLocation } = useLocation();
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [language, setLanguage] = useState('English');
   const [messages, setMessages] = useState([
     { id: 1, text: "Hi! I'm your Krishi Cart AI Assistant. How can I help you today?", sender: 'bot' }
   ]);
@@ -54,7 +58,12 @@ const Chatbot = () => {
       const response = await fetch('http://localhost:5000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage.text, location: selectedLocation })
+        body: JSON.stringify({ 
+          message: userMessage.text, 
+          location: selectedLocation,
+          language: language,
+          userId: user?.id || 'anonymous'
+        })
       });
 
       if (response.ok) {
@@ -103,12 +112,26 @@ const Chatbot = () => {
                 <p className="text-emerald-100 text-xs font-medium">Online & Ready to Help</p>
               </div>
             </div>
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="text-emerald-100 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <div className="relative flex items-center">
+                <Globe className="w-4 h-4 text-emerald-100 absolute left-2" />
+                <select 
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="bg-emerald-800 text-white text-xs py-1 pl-7 pr-2 rounded appearance-none border-none focus:ring-1 focus:ring-emerald-300 cursor-pointer"
+                >
+                  <option value="English">English</option>
+                  <option value="Hindi">हिंदी</option>
+                  <option value="Marathi">मराठी</option>
+                </select>
+              </div>
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="text-emerald-100 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           {/* Messages Area */}

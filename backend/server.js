@@ -2,11 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-const mongoose = require('mongoose');
 const axios = require('axios');
 require('dotenv').config();
 
-const { Product, Order, Delivery, Feedback, FarmerFeedback } = require('./models');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { Product, Order, Delivery, Feedback, FarmerFeedback, User, ChatHistory, Analytics } = require('./mock-mongoose');
 
 const app = express();
 const server = http.createServer(app);
@@ -18,15 +18,9 @@ const io = new Server(server, {
 });
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/krishicart';
 
-// Connect to MongoDB
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log(`✅ MongoDB Connected Successfully to ${MONGO_URI}`);
-    seedInitialData();
-  })
-  .catch((err) => console.error('❌ MongoDB Connection Error:', err));
+// Seed data
+seedInitialData();
 
 // Middleware
 app.use(cors());
@@ -485,8 +479,286 @@ app.post('/api/feedback', async (req, res) => {
   }
 });
 
-app.post('/api/chat', (req, res) => {
-  res.json({ reply: "I'm Krishi Cart AI. I can help with orders, delivery tracking and live mandi prices!" });
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy-key');
+
+app.post('/api/chat', async (req, res) => {
+  try {
+    const { message, location, language, userId } = req.body;
+    
+    // Save user message to history
+    const userChat = new ChatHistory({
+      userId: userId || 'anonymous',
+      sender: 'user',
+      message: message,
+      language: language || 'English'
+    });
+    await userChat.save();
+
+    if (!process.env.GEMINI_API_KEY) {
+      // Fallback if no key is provided
+      const reply = "I am Krishi Cart AI. Please configure GEMINI_API_KEY in the backend .env file to enable full AI responses. For now, I can help with basic orders and mandi prices!";
+      
+      const botChat = new ChatHistory({
+        userId: userId || 'anonymous',
+        sender: 'bot',
+        message: reply,
+        language: language || 'English'
+      });
+      await botChat.save();
+      
+      return res.json({ reply });
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    const prompt = `
+You are Krishi AI, an expert agricultural assistant for an app called Krishi Cart.
+You provide support to Indian farmers.
+The user is currently located in: ${location || 'Unknown'}.
+The user's preferred language is: ${language || 'English'}.
+
+Your areas of expertise:
+1. Farming guidance (crops, soil, fertilizers)
+2. Weather advice based on location
+3. Order and delivery assistance
+
+Rules:
+- Reply ONLY in the user's preferred language (${language || 'English'}).
+- Keep responses concise, practical, and farmer-friendly.
+- Do NOT use markdown asterisks/formatting unless necessary. Keep it plain text readable.
+- If asked about prices, say "Please use the 'Ask about prices' feature to get live Mandi prices."
+
+User Message: ${message}
+`;
+
+    const result = await model.generateContent(prompt);
+    const reply = result.response.text();
+    
+    // Save bot message to history
+    const botChat = new ChatHistory({
+      userId: userId || 'anonymous',
+      sender: 'bot',
+      message: reply,
+      language: language || 'English'
+    });
+    await botChat.save();
+
+    res.json({ reply });
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    res.status(500).json({ reply: "Sorry, I am facing some technical difficulties connecting to my AI brain. Please try again later." });
+  }
+});
+
+// Authentication Endpoints
+app.post('/api/signup', async (req, res) => {
+  try {
+    const { name, phoneOrEmail, password, role, aadharNumber } = req.body;
+    
+    // Check if user already exists
+    const existingUser = await User.findOne({ phoneOrEmail });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User with this email or phone already exists' });
+    }
+
+    const newUser = new User({
+      name,
+      phoneOrEmail,
+      password, // In a real app, hash the password
+      role,
+      aadharNumber
+    });
+    
+    const savedUser = await newUser.save();
+    // Don't send password back
+    const { password: _, ...userWithoutPassword } = savedUser.toObject();
+    
+    res.status(201).json({ message: 'User created successfully', user: userWithoutPassword });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create user' });
+  }
+});
+
+app.post('/api/login', async (req, res) => {
+  try {
+    const { phoneOrEmail, role } = req.body; // In a real app, verify password too
+    
+    let user = await User.findOne({ phoneOrEmail, role });
+    if (!user) {
+      // For hackathon mock purposes, if user doesn't exist, we auto-create one
+      const newUser = new User({
+        name: role === 'farmer' ? 'Demo Farmer' : role === 'delivery' ? 'Demo Delivery' : 'Demo Consumer',
+        phoneOrEmail,
+        password: 'mockpassword',
+        role,
+        aadharNumber: '000000000000'
+      });
+      user = await newUser.save();
+    }
+    
+    const { password: _, ...userWithoutPassword } = user.toObject();
+    res.json({ message: 'Login successful', user: userWithoutPassword });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to login' });
+  }
+});
+
+// AI Prediction Endpoints
+app.post('/api/predict-crop', (req, res) => {
+  try {
+    const { N, P, K, temperature, humidity, ph, rainfall } = req.body;
+    
+    // Simple Rule-Based/Decision-Tree-like mock ML for Crop Recommendation
+    let recommendedCrop = "Wheat";
+    
+    if (temperature > 25 && humidity > 70 && rainfall > 150) {
+      recommendedCrop = "Rice";
+    } else if (ph < 6.5 && N > 50 && K > 30) {
+      recommendedCrop = "Maize";
+    } else if (temperature > 20 && rainfall < 100 && P > 40) {
+      recommendedCrop = "Cotton";
+    } else if (temperature < 20 && humidity < 60) {
+      recommendedCrop = "Mustard";
+    } else if (N > 80 && rainfall > 100) {
+      recommendedCrop = "Sugarcane";
+    } else if (ph > 6.0 && ph < 7.0 && K > 40) {
+      recommendedCrop = "Potato";
+    } else if (temperature > 25 && humidity < 50) {
+      recommendedCrop = "Millets";
+    }
+    
+    // Simulate AI processing delay
+    setTimeout(() => {
+      res.json({ crop: recommendedCrop, confidence: (Math.random() * 15 + 80).toFixed(1) + "%" });
+    }, 1500);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to predict crop' });
+  }
+});
+
+app.post('/api/predict-price', async (req, res) => {
+  try {
+    const { crop, currentPrice, season, quantity, demand } = req.body;
+    
+    // Call Python ML Backend
+    const mlResponse = await axios.post('http://localhost:5001/api/ml/predict-price', {
+      crop: crop || 'Wheat',
+      currentPrice: currentPrice || 30.0,
+      season: season || 'Summer',
+      quantity: quantity || 100,
+      demand: demand || 'Medium'
+    });
+    
+    const predictionData = mlResponse.data;
+    
+    // Save to Analytics Collection
+    const analyticsEntry = new Analytics({
+      crop,
+      season,
+      demand,
+      quantity,
+      currentPrice,
+      predictedPrice: predictionData.predictedPrice,
+      trend: predictionData.trend,
+      timestamp: new Date()
+    });
+    await analyticsEntry.save();
+    
+    res.json(predictionData);
+  } catch (error) {
+    console.error('Failed to predict price from ML Backend:', error.message);
+    res.status(500).json({ error: 'Failed to predict price. Make sure Flask backend is running on port 5001.' });
+  }
+});
+
+app.get('/api/analytics', async (req, res) => {
+  try {
+    const analytics = await Analytics.find().sort({ createdAt: -1 });
+    res.json(analytics);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+});
+
+app.get('/api/analytics/dashboard-stats', async (req, res) => {
+  try {
+    const { farmerId } = req.query; // If provided, filter for a specific farmer
+
+    let orders = await Order.find();
+    
+    if (farmerId) {
+       // Mock logic: Assuming farmer name matches user name for simplicity in this mock DB
+       orders = orders.filter(o => o.farmer === farmerId);
+    }
+
+    // 1. Total Sales and Revenue
+    const totalOrders = orders.length;
+    let totalRevenue = 0;
+    
+    // 2. Revenue over time (Mocking 6 months based on current total)
+    // We will generate a realistic looking curve based on actual total
+    orders.forEach(o => {
+      // Amount is usually a string like "₹450.00", remove currency and parse
+      const val = parseFloat(o.amount.replace(/[^0-9.-]+/g, ''));
+      if(!isNaN(val)) totalRevenue += val;
+    });
+
+    const revenueGrowth = [
+      { month: 'Jan', revenue: Math.round(totalRevenue * 0.1) },
+      { month: 'Feb', revenue: Math.round(totalRevenue * 0.15) },
+      { month: 'Mar', revenue: Math.round(totalRevenue * 0.12) },
+      { month: 'Apr', revenue: Math.round(totalRevenue * 0.2) },
+      { month: 'May', revenue: Math.round(totalRevenue * 0.25) },
+      { month: 'Jun', revenue: Math.round(totalRevenue * 0.18) }
+    ];
+
+    // 3. Top Selling Products
+    const productCounts = {};
+    orders.forEach(o => {
+       // Item might be "Fresh Tomatoes (50kg)"
+       const nameMatch = o.item.split(' (')[0];
+       const name = nameMatch ? nameMatch.trim() : o.item;
+       if (!productCounts[name]) productCounts[name] = 0;
+       productCounts[name] += 1;
+    });
+    
+    const topProducts = Object.keys(productCounts)
+      .map(name => ({ name, sales: productCounts[name] }))
+      .sort((a, b) => b.sales - a.sales)
+      .slice(0, 5); // Top 5
+
+    // 4. Customer/User Activity (Global only)
+    let userStats = [];
+    if (!farmerId) {
+       const users = await User.find();
+       const roleCounts = { farmer: 0, consumer: 0, delivery: 0 };
+       users.forEach(u => {
+          if (u.role && roleCounts[u.role] !== undefined) {
+             roleCounts[u.role]++;
+          }
+       });
+       userStats = [
+         { name: 'Farmers', value: roleCounts.farmer || 3 },
+         { name: 'Consumers', value: roleCounts.consumer || 12 },
+         { name: 'Delivery', value: roleCounts.delivery || 5 }
+       ];
+    }
+
+    res.json({
+      totalSales: totalOrders,
+      totalRevenue: Math.round(totalRevenue),
+      revenueGrowth,
+      topProducts,
+      userStats
+    });
+
+  } catch (error) {
+    console.error('Failed to fetch dashboard stats:', error);
+    res.status(500).json({ error: 'Failed to fetch dashboard stats' });
+  }
 });
 
 // Start Server

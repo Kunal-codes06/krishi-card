@@ -9,10 +9,9 @@ const Signup = () => {
   const [role, setRole] = useState('farmer');
   const navigate = useNavigate();
   const { login } = useAuth();
-  // eslint-disable-next-line no-unused-vars
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    phoneOrEmail: '',
     password: '',
   });
 
@@ -47,7 +46,7 @@ const Signup = () => {
     }, 1500); // Simulate API call to UIDAI/Gov Database
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     if (!phoneVerified) {
       alert("Please verify your phone number using OTP first to prevent fake accounts.");
@@ -58,10 +57,32 @@ const Signup = () => {
       return;
     }
 
-    login({ ...formData, role });
-    if (role === 'farmer') navigate('/farmer');
-    else if (role === 'delivery') navigate('/delivery');
-    else navigate('/consumer');
+    try {
+      const res = await fetch('http://localhost:5000/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          phoneOrEmail: formData.phoneOrEmail,
+          password: formData.password,
+          role: role,
+          aadharNumber: aadharNumber
+        })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        login(data.user);
+        if (role === 'farmer') navigate('/farmer');
+        else if (role === 'delivery') navigate('/delivery');
+        else navigate('/consumer');
+      } else {
+        alert(data.error || "Signup failed");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Network error. Failed to sign up.");
+    }
   };
 
   return (
@@ -120,6 +141,8 @@ const Signup = () => {
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <input
                   type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder-slate-400 shadow-sm"
                   placeholder={t('login.namePlaceholder')}
                   required
@@ -132,6 +155,8 @@ const Signup = () => {
               <div className="flex gap-2">
                 <input
                   type="text"
+                  value={formData.phoneOrEmail}
+                  onChange={(e) => setFormData({...formData, phoneOrEmail: e.target.value})}
                   disabled={phoneVerified}
                   className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder-slate-400 shadow-sm disabled:bg-slate-50 disabled:text-slate-500"
                   placeholder={t('login.phonePlaceholder')}
@@ -170,6 +195,8 @@ const Signup = () => {
               <label className="block text-sm font-bold text-slate-700 mb-1.5">{t('login.password')}</label>
               <input
                 type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
                 className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder-slate-400 shadow-sm"
                 placeholder={t('login.passwordPlaceholder')}
                 required

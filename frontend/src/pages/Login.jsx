@@ -24,19 +24,32 @@ const Login = () => {
     }, 1000);
   };
 
-  const handleVerifyOTP = (e) => {
+  const handleVerifyOTP = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate verification
-    setTimeout(() => {
-      const user = { email: identifier, role };
-      login(user);
-
-      if (role === 'farmer') navigate('/farmer');
-      else if (role === 'delivery') navigate('/delivery');
-      else navigate('/consumer');
-    }, 1000);
+    try {
+      const res = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneOrEmail: identifier, role })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        login(data.user);
+        if (role === 'farmer') navigate('/farmer');
+        else if (role === 'delivery') navigate('/delivery');
+        else navigate('/consumer');
+      } else {
+        alert(data.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Network error. Failed to login.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

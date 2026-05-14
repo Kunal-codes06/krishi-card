@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars, react-hooks/set-state-in-effect, react-refresh/only-export-components */
 import { useState } from 'react';
 import { useLocation as useRouteLocation, Link, useNavigate } from 'react-router-dom';
-import { User, ShoppingCart, MapPin, Search, ChevronDown, Globe, LogOut, Home, Store } from 'lucide-react';
+import { User, ShoppingCart, MapPin, Search, ChevronDown, Globe, LogOut, Home, Store, BarChart2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from '../context/LocationContext';
 import { useAuth } from '../context/AuthContext';
@@ -113,6 +113,16 @@ const Navbar = () => {
                     >
                       <LogOut className="w-5 h-5" />
                     </button>
+                    {(user?.role?.toLowerCase() === 'admin' || user?.role?.toLowerCase() === 'farmer') && (
+                      <Link to="/analytics" className="p-2 text-slate-500 hover:text-emerald-600 transition-colors bg-slate-50 rounded-full hover:bg-emerald-50 ml-2" title="Analytics Dashboard">
+                        <BarChart2 className="w-5 h-5 transition-transform hover:scale-110" />
+                      </Link>
+                    )}
+                    {(user?.role?.toLowerCase() === 'consumer') && (
+                      <Link to="/nearby" className="p-2 text-slate-500 hover:text-emerald-600 transition-colors bg-slate-50 rounded-full hover:bg-emerald-50 ml-2" title="Nearby Farmers Map">
+                        <MapPin className="w-5 h-5 transition-transform hover:scale-110" />
+                      </Link>
+                    )}
                   </div>
                 )}
                 
