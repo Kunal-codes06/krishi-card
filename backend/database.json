@@ -114,6 +114,96 @@
       "_id": "4bae5bc0-bfcc-4494-bfcd-2c7f4cd437fb",
       "createdAt": "2026-05-14T03:57:53.487Z",
       "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "ethdhet",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "1eed4312-b043-45c4-8eca-c4217f7656cc",
+      "createdAt": "2026-05-14T04:06:04.785Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Consumer",
+      "phoneOrEmail": "RFWEF",
+      "password": "mockpassword",
+      "role": "consumer",
+      "aadharNumber": "000000000000",
+      "_id": "47be50a9-4d4d-40ff-b555-7b5cb37bedd4",
+      "createdAt": "2026-05-14T05:30:27.968Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "jjgjkjkj",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "71793bde-4742-468f-8a24-781af6f4ecd2",
+      "createdAt": "2026-05-14T05:34:50.499Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Consumer",
+      "phoneOrEmail": "tgerf",
+      "password": "mockpassword",
+      "role": "consumer",
+      "aadharNumber": "000000000000",
+      "_id": "62c5e9ad-ced0-4451-9019-9cfda44bc2c4",
+      "createdAt": "2026-05-14T05:38:03.857Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Consumer",
+      "phoneOrEmail": "4tge",
+      "password": "mockpassword",
+      "role": "consumer",
+      "aadharNumber": "000000000000",
+      "_id": "2d47a0b9-0d86-40f0-abd7-bf265792134b",
+      "createdAt": "2026-05-14T05:42:55.460Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "hkfshksdh",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "5c7544d7-b24f-4795-8f67-683730599424",
+      "createdAt": "2026-05-14T05:44:12.978Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "kdjckjnckj",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "2af5ebd5-77f4-4b35-a5b9-cccaf49699cd",
+      "createdAt": "2026-05-14T05:46:28.586Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "kkhb",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "f64f31fc-a569-4962-a6b3-95bf9cc4c0e1",
+      "createdAt": "2026-05-14T05:48:07.547Z",
+      "_collectionName": "users"
+    },
+    {
+      "name": "Demo Farmer",
+      "phoneOrEmail": "ge",
+      "password": "mockpassword",
+      "role": "farmer",
+      "aadharNumber": "000000000000",
+      "_id": "a491688d-12ab-4425-89ab-5092d39cdbfd",
+      "createdAt": "2026-05-14T06:14:07.030Z",
+      "_collectionName": "users"
     }
   ],
   "chatHistory": [
@@ -133,6 +223,42 @@
       "language": "Hindi",
       "_id": "dbb265f6-48ea-4224-8725-375c33c44844",
       "createdAt": "2026-05-13T19:56:13.074Z",
+      "_collectionName": "chatHistory"
+    },
+    {
+      "userId": "anonymous",
+      "sender": "user",
+      "message": "HI",
+      "language": "English",
+      "_id": "5688fabf-19b1-48fc-8f31-b81fa9cc1d91",
+      "createdAt": "2026-05-14T05:29:08.683Z",
+      "_collectionName": "chatHistory"
+    },
+    {
+      "userId": "anonymous",
+      "sender": "user",
+      "message": "SO WHAT CAN I DO",
+      "language": "English",
+      "_id": "8be121c9-9367-4749-8d27-659fdd315d16",
+      "createdAt": "2026-05-14T05:29:18.487Z",
+      "_collectionName": "chatHistory"
+    },
+    {
+      "userId": "anonymous",
+      "sender": "user",
+      "message": "HI",
+      "language": "Hindi",
+      "_id": "f0e5f169-0fb3-44fd-b7c2-ef543185f616",
+      "createdAt": "2026-05-14T05:29:27.549Z",
+      "_collectionName": "chatHistory"
+    },
+    {
+      "userId": "anonymous",
+      "sender": "user",
+      "message": "hi]",
+      "language": "Hindi",
+      "_id": "e0856f56-11dc-4bc5-87a0-02be450f6f0b",
+      "createdAt": "2026-05-14T05:37:40.899Z",
       "_collectionName": "chatHistory"
     }
   ],
@@ -187,6 +313,45 @@
       "timestamp": "2026-05-13T20:03:27.646Z",
       "_id": "f5f2b7f7-99d2-43fa-aed2-a6a52b8ccb3e",
       "createdAt": "2026-05-13T20:03:27.646Z",
+      "_collectionName": "analytics"
+    },
+    {
+      "crop": "Rice",
+      "season": "Winter",
+      "demand": "Low",
+      "quantity": 100,
+      "currentPrice": 30,
+      "predictedPrice": 25.39,
+      "trend": "down",
+      "timestamp": "2026-05-14T05:25:41.917Z",
+      "_id": "2f28cf8c-3178-4364-91df-4ce93db803a4",
+      "createdAt": "2026-05-14T05:25:41.919Z",
+      "_collectionName": "analytics"
+    },
+    {
+      "crop": "Rice",
+      "season": "Winter",
+      "demand": "Medium",
+      "quantity": 100,
+      "currentPrice": 30,
+      "predictedPrice": 30.86,
+      "trend": "up",
+      "timestamp": "2026-05-14T05:44:40.358Z",
+      "_id": "d6e5721e-162d-430e-b415-699e6e44f6c7",
+      "createdAt": "2026-05-14T05:44:40.358Z",
+      "_collectionName": "analytics"
+    },
+    {
+      "crop": "Rice",
+      "season": "Winter",
+      "demand": "Low",
+      "quantity": 100,
+      "currentPrice": 30,
+      "predictedPrice": 25.39,
+      "trend": "down",
+      "timestamp": "2026-05-14T05:44:52.054Z",
+      "_id": "4a23ba44-81c4-4f79-80f9-98cfe7d00be7",
+      "createdAt": "2026-05-14T05:44:52.054Z",
       "_collectionName": "analytics"
     }
   ]

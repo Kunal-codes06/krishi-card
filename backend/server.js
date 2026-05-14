@@ -211,7 +211,6 @@ app.post('/api/orders', async (req, res) => {
     }
 
     let finalPrice = Number(product.price) * quantity;
-    if (quantity >= 50) finalPrice *= 0.9;
 
     const orderCount = await Order.countDocuments();
     const orderIdStr = `#ORD-${String(orderCount + 1).padStart(3, '0')}`;
@@ -495,7 +494,7 @@ app.post('/api/chat', async (req, res) => {
     });
     await userChat.save();
 
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_actual_gemini_api_key_here' || process.env.GEMINI_API_KEY === 'dummy-key') {
       // Fallback if no key is provided
       const reply = "I am Krishi Cart AI. Please configure GEMINI_API_KEY in the backend .env file to enable full AI responses. For now, I can help with basic orders and mandi prices!";
       

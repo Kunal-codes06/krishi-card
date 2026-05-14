@@ -31,13 +31,11 @@ const Checkout = () => {
     image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?ixlib=rb-4.0.3&w=100&q=60'
   };
 
-  const basePrice = product.price * quantity;
-  const isBulk = quantity >= 50;
-  const discount = isBulk ? basePrice * 0.1 : 0; // 10% discount for bulk
-  const subtotal = basePrice - discount;
+  const availableStock = parseInt(String(product.stock).replace(/\D/g, '')) || 100;
+  const basePrice = product.price * (parseInt(quantity) || 0);
+  const subtotal = basePrice;
   const deliveryFee = 40;
-  const platformFee = 10;
-  const total = subtotal + deliveryFee + platformFee;
+  const total = subtotal + deliveryFee;
 
   const handlePayment = async () => {
     setIsProcessing(true);
@@ -174,6 +172,7 @@ const Checkout = () => {
                         <h3 className="font-extrabold text-lg text-slate-900 mb-1">{product.name}</h3>
                         <p className="text-sm text-slate-500 font-medium mb-2">{t('checkout.from')} <span className="text-slate-700 font-bold">{product.farmer}</span></p>
                         <div className="font-black text-xl text-emerald-700">₹{product.price}<span className="text-sm text-slate-500">/kg</span></div>
+                        <p className="text-sm text-slate-500 font-medium mt-1">Available Stock: <span className="text-emerald-600 font-bold">{availableStock} kg</span></p>
                       </div>
                     </div>
                     
@@ -181,26 +180,38 @@ const Checkout = () => {
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Quantity (kg)</label>
                       <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl p-1 shadow-sm">
                          <button 
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            onClick={() => setQuantity(Math.max(1, (parseInt(quantity) || 1) - 1))}
                             className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold transition-colors"
                          >-</button>
                          <input 
                            type="number" 
                            min="1" 
+                           max={availableStock}
                            value={quantity}
-                           onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                           onChange={(e) => {
+                             const val = e.target.value;
+                             if (val === '') {
+                               setQuantity('');
+                             } else {
+                               const num = parseInt(val);
+                               if (!isNaN(num)) {
+                                 setQuantity(Math.min(availableStock, num));
+                               }
+                             }
+                           }}
+                           onBlur={(e) => {
+                             const val = parseInt(e.target.value);
+                             if (isNaN(val) || val < 1) {
+                               setQuantity(1);
+                             }
+                           }}
                            className="w-16 text-center font-bold text-slate-900 bg-transparent outline-none"
                          />
                          <button 
-                            onClick={() => setQuantity(quantity + 1)}
+                            onClick={() => setQuantity(Math.min(availableStock, (parseInt(quantity) || 0) + 1))}
                             className="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 font-bold transition-colors"
                          >+</button>
                       </div>
-                      {quantity >= 50 && (
-                         <div className="text-xs font-bold text-green-600 flex items-center gap-1 animate-in fade-in">
-                            <TrendingDown className="w-3 h-3" /> 10% Bulk Discount Applied!
-                         </div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -256,20 +267,12 @@ const Checkout = () => {
                   <span>{t('checkout.subtotal')} ({quantity}kg)</span>
                   <span className="font-bold text-slate-700">₹{basePrice}</span>
                 </div>
-                {isBulk && (
-                   <div className="flex justify-between text-green-600 font-bold bg-green-50 p-2 rounded-lg">
-                     <span>Bulk Discount (10%)</span>
-                     <span>-₹{discount}</span>
-                   </div>
-                )}
+
                 <div className="flex justify-between text-slate-500 font-medium">
                   <span>{t('checkout.delivery')} <span className="text-xs ml-1 bg-yellow-100 text-yellow-800 font-bold px-1.5 py-0.5 rounded border border-yellow-200">Direct</span></span>
                   <span className="font-bold text-slate-700">₹{deliveryFee}</span>
                 </div>
-                <div className="flex justify-between text-slate-500 font-medium">
-                  <span>{t('checkout.platform')}</span>
-                  <span className="font-bold text-slate-700">₹{platformFee}</span>
-                </div>
+
                 
                 <div className="border-t border-slate-200 pt-5 mt-2 flex justify-between items-center">
                   <span className="font-extrabold text-slate-800">{t('checkout.total')}</span>
